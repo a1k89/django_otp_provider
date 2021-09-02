@@ -28,9 +28,6 @@ class Otp(models.Model):
     attempts = models.PositiveIntegerField(default=conf.ATTEMPTS)
     is_code_sended = models.BooleanField(default=False)
 
-
-
-
     def __repr__(self):
         return self.token
 
