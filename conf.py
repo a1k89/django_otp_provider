@@ -2,6 +2,13 @@ from enum import Enum
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.validators import \
+    validate_email, \
+    RegexValidator
+
+phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                             message="Phone number must be entered in the format: '+999999999'. "
+                                     "Up to 15 digits allowed.")
 
 
 class TransportHandler:
@@ -29,18 +36,19 @@ class Transport(Enum):
     SMS = 'sms'
     EMAIL = 'email'
 
-    def handler(self):
-        if self == Transport.SMS:
-            print("via sms")
-            with TransportHandler() as transport:
-                pass
-
-        if self == Transport.EMAIL:
-            print("via email")
-
     @classmethod
     def all(cls):
         return [e.value for e in Transport]
+
+    def handler(self):
+        pass
+
+    def validator(self, value):
+        if self == Transport.EMAIL:
+            return validate_email(value)
+
+        if self == Transport.SMS:
+            return phone_regex(value)
 
 
 OTP_PROVIDER = getattr(settings, "OTP_PROVIDER", {})

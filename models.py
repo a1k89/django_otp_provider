@@ -11,6 +11,8 @@ from .utils \
 
 from .conf import conf
 
+from django.core.validators import validate_email
+
 
 class Otp(models.Model):
     """
@@ -23,7 +25,7 @@ class Otp(models.Model):
     """
 
     token = models.CharField(max_length=250, unique=True, default=uuid.uuid4().hex)
-    key = models.CharField(max_length=50, unique=True)
+    key = models.CharField(max_length=50, unique=True, validators=[conf.TRANSPORT.validator])
     expire_at = models.DateTimeField(default=expire_at)
     attempts = models.PositiveIntegerField(default=conf.ATTEMPTS)
     is_code_sended = models.BooleanField(default=False)
