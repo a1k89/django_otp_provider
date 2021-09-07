@@ -23,24 +23,22 @@ def generate_otp(key) -> Optional[Otp]:
 
     if otp is None:
         otp = Otp.objects.create(key=key)
-
         return otp
+
     else:
         raise ValidationError(conf.ERROR_TEXT)
 
 
-def verify(key: str, token: str, code: str) -> bool:
+def verify(key: str, token: str, code: str):
     otp = otp_sel.get_otp_by_key(token=token, key=key, raise_exc=True)
 
     if not otp.is_allow_new_attempt:
-        raise ValidationError(conf.ERROR_TEXT)
+        raise ValidationError(conf.ERROR_TEXT_ATTEMTPS)
 
     if code == otp.code:
         otp.delete()
+    else:
+        otp.attempts -= 1
+        otp.save()
 
-        return True
-
-    otp.attempts -= 1
-    otp.save()
-
-    return False
+        raise ValidationError(conf.ERROR_TEXT_CODE)

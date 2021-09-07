@@ -26,4 +26,6 @@ def send_code(func):
         result = func(*args, **kwargs)
         otp_transport_handler.delay(result.pk)
 
+        return result
+
     return wrapper

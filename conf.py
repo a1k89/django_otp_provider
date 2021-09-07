@@ -33,8 +33,8 @@ class EmailTransportHandler(TransportHandler):
 
 
 class Transport(Enum):
-    SMS = 'sms'
-    EMAIL = 'email'
+    SMS = 'SMS'
+    EMAIL = 'EMAIL'
 
     @classmethod
     def all(cls):
@@ -58,6 +58,8 @@ OTP_PROVIDER.setdefault("LIFETIME", 60)
 OTP_PROVIDER.setdefault("TRANSPORT", Transport.EMAIL)
 OTP_PROVIDER.setdefault("ERROR_TEXT", 'Please try again later')
 OTP_PROVIDER.setdefault("CELERY", 'run_celery')
+OTP_PROVIDER.setdefault("ERROR_TEXT_CODE", "Code is not valid")
+OTP_PROVIDER.setdefault("ERROR_TEXT_ATTEMTPS", "No attempts left")
 
 
 class Conf:
@@ -66,6 +68,8 @@ class Conf:
     LIFETIME = OTP_PROVIDER.get("LIFETIME")
     TRANSPORT = OTP_PROVIDER.get("TRANSPORT")
     ERROR_TEXT = OTP_PROVIDER.get("ERROR_TEXT")
+    ERROR_TEXT_CODE = OTP_PROVIDER.get("ERROR_TEXT_CODE")
+    ERROR_TEXT_ATTEMTPS = OTP_PROVIDER.get("ERROR_TEXT_ATTEMTPS")
     CELERY = OTP_PROVIDER.get("CELERY")
 
     def __init__(self):
