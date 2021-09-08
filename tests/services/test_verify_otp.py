@@ -27,7 +27,7 @@ class VerifyOtpTestCase(TestCase):
             key=self.key
         )
 
-        wrong_code = otp_db.code + 'wrong'
+        wrong_code = random.randint(1000, 9000)
         with self.assertRaises(ValidationError):
             verify_otp(key=otp_db.key,
                         token=otp_db.token,
