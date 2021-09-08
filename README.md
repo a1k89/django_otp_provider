@@ -3,6 +3,8 @@
 * OTP
 * Transport: SMS or EMAIL
 * Async (celery)
+* Custom SMS providers
+
 
 ### Requirements
 + Python >= 3.0
