@@ -8,18 +8,37 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Otp',
+            name="Otp",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('token', models.CharField(default='e884f6c5030749d9a3b74c664e6fdf38', max_length=250, unique=True)),
-                ('key', models.CharField(max_length=50, unique=True)),
-                ('expire_at', models.DateTimeField(default=common.django_otp_provider.utils.expire_at)),
-                ('attempts', models.PositiveIntegerField(default=3)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "token",
+                    models.CharField(
+                        default="e884f6c5030749d9a3b74c664e6fdf38",
+                        max_length=250,
+                        unique=True,
+                    ),
+                ),
+                ("key", models.CharField(max_length=50, unique=True)),
+                (
+                    "expire_at",
+                    models.DateTimeField(
+                        default=common.django_otp_provider.utils.expire_at
+                    ),
+                ),
+                ("attempts", models.PositiveIntegerField(default=3)),
             ],
         ),
     ]

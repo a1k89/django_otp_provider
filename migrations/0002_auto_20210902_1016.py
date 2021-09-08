@@ -6,18 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_otp_provider', '0001_initial'),
+        ("django_otp_provider", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='otp',
-            name='is_code_sended',
+            model_name="otp",
+            name="is_code_sended",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='otp',
-            name='token',
-            field=models.CharField(default='ca7520888bd34e35953e2a113ed928c3', max_length=250, unique=True),
+            model_name="otp",
+            name="token",
+            field=models.CharField(
+                default="ca7520888bd34e35953e2a113ed928c3", max_length=250, unique=True
+            ),
         ),
     ]

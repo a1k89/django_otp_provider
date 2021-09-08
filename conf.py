@@ -1,92 +1,60 @@
-from enum import Enum
+import importlib
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.validators import \
-    validate_email, \
-    RegexValidator
 
-phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                             message="Phone number must be entered in the format: '+999999999'. "
-                                     "Up to 15 digits allowed.")
-
-
-class TransportHandler:
-    def __enter__(self):
-        print('enter')
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        print('exit')
-
-    def send(self, *args, **kwargs):
-        raise NotImplemented
-
-
-class SMSTransportHandler(TransportHandler):
-    def send(self, *args, **kwargs):
-        pass
-
-
-class EmailTransportHandler(TransportHandler):
-    def send(self, *args, **kwargs):
-        pass
-
-
-class Transport(Enum):
-    SMS = 'SMS'
-    EMAIL = 'EMAIL'
-
-    @classmethod
-    def all(cls):
-        return [e.value for e in Transport]
-
-    def get_transport_class(self):
-        from .transport import email, sms
-        
-        if self == Transport.EMAIL:
-            return email.EmailTransport
-
-        if self == Transport.SMS:
-            return sms.SmsTransport
-
-    def validator(self, value):
-        if self == Transport.EMAIL:
-            return validate_email(value)
-
-        if self == Transport.SMS:
-            return phone_regex(value)
+from . import utils as otp_utils
 
 
 OTP_PROVIDER = getattr(settings, "OTP_PROVIDER", {})
-OTP_PROVIDER.setdefault("SIZE", 4)
+OTP_PROVIDER.setdefault("OTP_SIZE", 4)
+OTP_PROVIDER.setdefault("DEBUG_OTP_CODE", "1111")
 OTP_PROVIDER.setdefault("ATTEMPTS", 3)
 OTP_PROVIDER.setdefault("LIFETIME", 60)
-OTP_PROVIDER.setdefault("TRANSPORT", Transport.EMAIL)
-OTP_PROVIDER.setdefault("ERROR_TEXT", 'Please try again later')
-OTP_PROVIDER.setdefault("CELERY", 'run_celery')
+OTP_PROVIDER.setdefault("TRANSPORT_TYPE", otp_utils.Transport.SMS)
+OTP_PROVIDER.setdefault("TRANSPORT_CLASS")
+OTP_PROVIDER.setdefault("ERROR_TEXT", "Please try again later")
 OTP_PROVIDER.setdefault("ERROR_TEXT_CODE", "Code is not valid")
 OTP_PROVIDER.setdefault("ERROR_TEXT_ATTEMTPS", "No attempts left")
+OTP_PROVIDER.setdefault("CELERY", "run_celery")
 
 
 class Conf:
-    SIZE = OTP_PROVIDER.get("SIZE")
+    OTP_SIZE = OTP_PROVIDER.get("OTP_SIZE")
     ATTEMPTS = OTP_PROVIDER.get("ATTEMPTS")
     LIFETIME = OTP_PROVIDER.get("LIFETIME")
-    TRANSPORT = OTP_PROVIDER.get("TRANSPORT")
+    DEBUG_OTP_CODE = OTP_PROVIDER.get("DEBUG_OTP_CODE")
+    TRANSPORT_TYPE = OTP_PROVIDER.get("TRANSPORT_TYPE")
+    TRANSPORT_CLASS = OTP_PROVIDER.get("TRANSPORT_CLASS")
     ERROR_TEXT = OTP_PROVIDER.get("ERROR_TEXT")
     ERROR_TEXT_CODE = OTP_PROVIDER.get("ERROR_TEXT_CODE")
     ERROR_TEXT_ATTEMTPS = OTP_PROVIDER.get("ERROR_TEXT_ATTEMTPS")
     CELERY = OTP_PROVIDER.get("CELERY")
-    TRANSPORT_CLASS = None
+
+    @classmethod
+    def resolve_transport(cls, transport):
+        try:
+           return otp_utils.Transport(transport)
+        except ValueError:
+            raise ImproperlyConfigured("Transport is not defined")
+
+    @classmethod
+    def resolve_provider(cls, path: str):
+        arr = path.split('.')
+        class_obj = arr.pop()
+        try:
+            module = importlib.import_module('.'.join(arr))
+        except ModuleNotFoundError:
+            raise ImproperlyConfigured("TRANSPORT_CLASS value is not valid")
+
+        if not hasattr(module, class_obj):
+            raise ImproperlyConfigured(f"class {class_obj} not found in module {module}")
+
+        return getattr(module, class_obj)
 
     def __init__(self):
-        super().__init__()
-
-        if self.TRANSPORT not in Transport.all():
-            raise ImproperlyConfigured('Transport is not defined')
-
-        self.TRANSPORT = Transport(self.TRANSPORT)
-        self.TRANSPORT_CLASS = self.TRANSPORT.get_transport_class()
+        self.TRANSPORT_TYPE = self.__class__.resolve_transport(self.TRANSPORT_TYPE)
+        self.TRANSPORT_CLASS = self.__class__.resolve_provider(self.TRANSPORT_CLASS)
 
 
 conf = Conf()

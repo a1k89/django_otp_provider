@@ -14,4 +14,3 @@ def otp_transport_handler(pk: int):
         transport_class = conf.TRANSPORT_CLASS
         with transport_class(otp) as transport:
             transport.send_code()
-

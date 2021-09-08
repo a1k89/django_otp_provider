@@ -7,18 +7,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_otp_provider', '0002_auto_20210902_1016'),
+        ("django_otp_provider", "0002_auto_20210902_1016"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='otp',
-            name='key',
-            field=models.CharField(max_length=50, unique=True, validators=[django.core.validators.EmailValidator]),
+            model_name="otp",
+            name="key",
+            field=models.CharField(
+                max_length=50,
+                unique=True,
+                validators=[django.core.validators.EmailValidator],
+            ),
         ),
         migrations.AlterField(
-            model_name='otp',
-            name='token',
-            field=models.CharField(default='eaf22e96082e4745b7e948b8d1a239ec', max_length=250, unique=True),
+            model_name="otp",
+            name="token",
+            field=models.CharField(
+                default="eaf22e96082e4745b7e948b8d1a239ec", max_length=250, unique=True
+            ),
         ),
     ]

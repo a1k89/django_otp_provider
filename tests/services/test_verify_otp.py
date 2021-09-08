@@ -1,0 +1,34 @@
+import random
+from django.test import TestCase
+from django.core.exceptions import ValidationError
+
+from common.django_otp_provider.services import \
+    verify_otp
+
+from common.django_otp_provider.models import Otp
+
+
+class VerifyOtpTestCase(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.key = random.randint(1000000000, 9999999999)
+
+    def test_with_correct_data(self):
+        otp_db = Otp.objects.create(
+            key=self.key
+        )
+        otp = verify_otp(key=otp_db.key,
+                         token=otp_db.token,
+                         code=otp_db.code)
+        self.assertIsNone(otp)
+
+    def test_wrong_data(self):
+        otp_db = Otp.objects.create(
+            key=self.key
+        )
+
+        wrong_code = otp_db.code + 'wrong'
+        with self.assertRaises(ValidationError):
+            verify_otp(key=otp_db.key,
+                        token=otp_db.token,
+                        code=wrong_code)
