@@ -40,8 +40,14 @@ class Transport(Enum):
     def all(cls):
         return [e.value for e in Transport]
 
-    def handler(self):
-        pass
+    def get_transport_class(self):
+        from .transport import email, sms
+        
+        if self == Transport.EMAIL:
+            return email.EmailTransport
+
+        if self == Transport.SMS:
+            return sms.SmsTransport
 
     def validator(self, value):
         if self == Transport.EMAIL:
@@ -71,14 +77,16 @@ class Conf:
     ERROR_TEXT_CODE = OTP_PROVIDER.get("ERROR_TEXT_CODE")
     ERROR_TEXT_ATTEMTPS = OTP_PROVIDER.get("ERROR_TEXT_ATTEMTPS")
     CELERY = OTP_PROVIDER.get("CELERY")
+    TRANSPORT_CLASS = None
 
     def __init__(self):
         super().__init__()
 
         if self.TRANSPORT not in Transport.all():
-            raise ImproperlyConfigured('Please provide valid transport')
+            raise ImproperlyConfigured('Transport is not defined')
 
         self.TRANSPORT = Transport(self.TRANSPORT)
+        self.TRANSPORT_CLASS = self.TRANSPORT.get_transport_class()
 
 
 conf = Conf()

@@ -1,25 +1,21 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
+from .base import BaseTransport
 
-def test_email():
-    from apps.core.models import AppSettings
-    app_core_settings = AppSettings.load()
 
-    subject = f"Test"
+class EmailTransport(BaseTransport):
+    def send_code(self):
+        subject = 'Auth code'
+        from_email = 'test@test.ru'
+        to = ['akoptev1989@ya.ru']
+        html = render_to_string("base.html", {'otp': self.otp})
 
-    from_email = app_core_settings.no_reply_email
-    to = [app_core_settings.main_email]
-    bcc = app_core_settings.get_notification_emails()
-    html = render_to_string("base.html", {
-    })
+        mail = EmailMultiAlternatives(
+            subject=subject, body=html, from_email=from_email, to=to )
 
-    mail = EmailMultiAlternatives(
-        subject=subject, body=html, from_email=from_email, to=to, bcc=bcc)
+        mail.attach_alternative( html, "text/html" )
 
-    mail.attach_alternative(html, "text/html")
-
-    return mail.send(fail_silently=True)
-
+        return mail.send( fail_silently=True )
 
 
