@@ -13,17 +13,16 @@
 + PyJWT
 
 ### Schema
-1. Install `django-otp-provider` library
-2. Create your custom  class extends from `BaseTransport` and implement `send_code`
-3. In settings.py add:
-`
+1. Install `django-otp-provider`
+2. Create your custom class extends from `BaseTransport` and implement `send_code` method
+3. In settings.py:
+```python
 OTP_PROVIDER = {
-    'TRANSPORT_TYPE': "SMS",
+    'TRANSPORT_TYPE': "SMS", # EMAIL/SMS
     'TRANSPORT_CLASS': 'path.to.your.provider',
-    'CELERY': 'path.to.your.celery.file'
+    'CELERY': 'path.to.your.celery.file' # Send code async
 }
-`
-4. In your methods use 
+```
+4. Then, in your code use 
 + `generate_otp` - to generate code and send it
 + `verify_otp` - to verify payload from user
- 
