@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     keywords='django otp',
     url="https://github.com/a1k89/django_otp_provider",
-    packages=setuptools.find_packages(exclude=["demo"]),
+    packages=setuptools.find_packages(exclude=["migrations"]),
     install_requires=['Django>=2.0',
                       'celery>=5.0',
                       'pyjwt'],
