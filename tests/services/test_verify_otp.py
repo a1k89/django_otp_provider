@@ -2,10 +2,8 @@ import random
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from common.django_otp_provider.services import \
-    verify_otp
-
-from common.django_otp_provider.models import Otp
+from ...services import verify_otp
+from ...models import Otp
 
 
 class VerifyOtpTestCase(TestCase):

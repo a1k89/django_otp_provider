@@ -2,7 +2,7 @@ import random
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from common.django_otp_provider.services import generate_otp
+from ...services import generate_otp
 
 
 class GenerateOtpTestCase(TestCase):

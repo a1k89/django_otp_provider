@@ -9,6 +9,10 @@ app = getattr(celery_conf, "app")
 
 @app.task
 def otp_transport_handler(pk: int):
+    """
+    Get transport from conf and send code to destination (email/sms)
+
+    """
     otp = otp_sel.get_otp_by_key(pk=pk)
     if otp is not None:
         transport_class = conf.TRANSPORT_CLASS

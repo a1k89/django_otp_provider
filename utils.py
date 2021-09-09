@@ -17,10 +17,7 @@ phone_regex = RegexValidator(
 
 def expire_at() -> datetime:
     from .conf import conf
-    """
-    End date when you may to use generated code
 
-    """
     now = timezone.now()
     due_at = now + timedelta(seconds=conf.LIFETIME)
 
@@ -28,6 +25,10 @@ def expire_at() -> datetime:
 
 
 def send_code(func):
+    """
+    Try to get transport and send code
+
+    """
     def wrapper(*args, **kwargs):
         from .tasks import otp_transport_handler
 
