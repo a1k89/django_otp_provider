@@ -1,0 +1,45 @@
+Metadata-Version: 2.1
+Name: django-otp-provider
+Version: 1.0.0
+Summary: Django OTP (One Time Password)
+Home-page: https://github.com/a1k89/django_otp_provider
+Author: Andrei Koptev
+Author-email: akoptev1989@ya.ru
+License: MIT
+Description: # Django otp provider
+        
+        * OTP
+        * Transport: SMS or EMAIL
+        * Async (celery)
+        * Custom SMS providers
+        
+        
+        ### Requirements
+        + Python >= 3.0
+        + Django >= 2.0
+        + Celery
+        + PyJWT
+        
+        ### Schema
+        1. Install `django-otp-provider`
+        2. Create your custom class extends from `BaseTransport` and implement `send_code` method
+        3. In settings.py:
+        ```python
+        OTP_PROVIDER = {
+            'TRANSPORT_TYPE': "SMS", # EMAIL/SMS
+            'TRANSPORT_CLASS': 'path.to.your.provider',
+            'CELERY': 'path.to.your.celery.file' # Send code async
+        }
+        ```
+        4. Then, in your code use 
+        + `generate_otp` - to generate code and send it
+        + `verify_otp` - to verify payload from user
+        
+Keywords: django otp
+Platform: UNKNOWN
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: System Administrators
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Software Development
+Description-Content-Type: text/markdown

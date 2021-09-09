@@ -13,7 +13,7 @@
 + PyJWT
 
 ### Schema
-1. Install `django-otp-provider`
+1. `pip install django-otp-provider`
 2. Create your custom class extends from `BaseTransport` and implement `send_code` method
 3. In settings.py:
 ```python
@@ -23,6 +23,6 @@ OTP_PROVIDER = {
     'CELERY': 'path.to.your.celery.file' # Send code async
 }
 ```
-4. Then, in your code use 
+4. Then, in your code you may to use: 
 + `generate_otp` - to generate code and send it
 + `verify_otp` - to verify payload from user
