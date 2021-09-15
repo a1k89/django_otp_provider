@@ -5,4 +5,4 @@ __pycache__
 migrations/
 build/
 dist/
-django_rest_sms_auth.egg-info/
+*.egg-info/
