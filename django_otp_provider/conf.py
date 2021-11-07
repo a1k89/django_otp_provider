@@ -8,7 +8,7 @@ from . import utils as otp_utils
 
 OTP_PROVIDER = getattr(settings, "OTP_PROVIDER", {})
 OTP_PROVIDER.setdefault("OTP_SIZE", 4)
-OTP_PROVIDER.setdefault("DEBUG_OTP_CODE", "1111")
+OTP_PROVIDER.setdefault("DEBUG_OTP_CODE")
 OTP_PROVIDER.setdefault("ATTEMPTS", 3)
 OTP_PROVIDER.setdefault("LIFETIME", 60)
 OTP_PROVIDER.setdefault("TRANSPORT_TYPE", otp_utils.Transport.SMS)

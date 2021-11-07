@@ -46,7 +46,7 @@ class Otp(models.Model):
 
     @property
     def code(self) -> str:
-        if settings.DEBUG:
+        if conf.DEBUG_OTP_CODE is not None:
             return conf.DEBUG_OTP_CODE
 
         payload = {"token": str(self.token), "key": str(self.key)}
